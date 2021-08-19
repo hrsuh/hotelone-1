@@ -4,7 +4,7 @@ env:
   variables:
     _PROJECT_NAME: "user01-customer-test"
     _DIR_NAME: "customer"
-    _EKS: "user01-EKS"
+    _EKS: "hotelone-eksf"
     _NAMESPACE: "hotelone"
 
 phases:
@@ -33,11 +33,11 @@ phases:
       - echo Building the Docker image...
       - cd $_DIR_NAME && mvn package -Dmaven.test.skip=true
       - docker images
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$IMAGE_TAG .
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION .
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo connect kubectl
       - kubectl config set-cluster k8s --server="$KUBE_URL" --insecure-skip-tls-verify=true
       - kubectl config set-credentials admin --token="$KUBE_TOKEN"
@@ -80,7 +80,7 @@ phases:
               spec:
                 containers:
                   - name: $_DIR_NAME
-                    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$IMAGE_TAG
+                    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_PROJECT_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                     imagePullPolicy: Always
                     ports:
                       - containerPort: 8080
