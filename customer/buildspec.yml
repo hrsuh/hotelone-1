@@ -5,7 +5,7 @@ env:
     _PROJECT_NAME: "user01-customer-test"
     _DIR_NAME: "customer"
     _EKS: "hotelone-eksf"
-    _NAMESPACE: "hotelone"
+#    _NAMESPACE: "hotelone"
 
 phases:
   install:
@@ -49,7 +49,7 @@ phases:
           kind: Service
           metadata:
             name: $_DIR_NAME
-            namespace: $_NAMESPACE
+#            namespace: $_NAMESPACE
             labels:
               app: $_DIR_NAME
           spec:
@@ -65,7 +65,7 @@ phases:
           kind: Deployment
           metadata:
             name: $_DIR_NAME
-            namespace: $_NAMESPACE
+#            namespace: $_NAMESPACE
             labels:
               app: $_DIR_NAME
           spec:
